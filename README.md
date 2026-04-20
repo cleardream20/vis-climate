@@ -50,17 +50,6 @@ npm run dev
 | 点击城市 / 搜索选点 · 右侧城市洞察 | 标注可点选（`placeMarkers` + `HeatmapMap` 绑定 `setSelectedPlace`）；`CityDetailDrawer.tsx`：层级文案、经纬度度分秒、本地时区时间、CMA 四层热浪指标说明、1974–2023 四类指标演示折线、可选年月的「日最高气温」演示折线；状态见 `useAppStore.selectedPlace` |
 | 顶栏「指标」· 全国侧栏 | `MetricsDrawer.tsx`：摘要卡 + CMA 四层简介 + **1974–2023 四张年序折线**（`MetricYearSparkline.tsx`）；有 `national_stats.json` 时**首图**使用该文件中的热浪日数，后三图为演示序列（`demoNationalHeatMetrics.ts`）；竖线与时间轴当前年联动 |
 
-## 数据说明（重要）
-
-**当前地图上的场不是真实观测数据。**
-
-- 格点值来自 `src/lib/demoField.ts` 里的 **`scalarField01`**：用数学函数（高斯团块、正弦项等）在 0～1 之间造的一个**演示标量场**，仅用于打通交互与可视化。
-- 「气温」展示模式（热浪档）里，该标量再经 **`scalarToTempC`** 线性映射到约 **-38～48℃**（`t=0` 对应 -38℃，与真实年均温分布无关）。
-- 色标在 `src/lib/colorScale.ts` 的 `TEMP_COLOR_STOPS`：例如 **-20℃、-30℃** 附近对应紫红、浅粉紫等，演示场在空间上很容易大量落在偏冷的温度档，**视觉上会像大片粉红/紫色，这不代表真实零下二十多度的面积分布**。
-- 距平模式同理：是对同一套演示标量做分档/渐变上色，**不是**真实距平场。
-
-若要 **真实数据**，需用 ERA5、再分析或自处理结果替换上述合成场（见下节）。
-
 ## 与真实数据对接
 
 完整步骤与 DOMAIN 约定见仓库根目录 **`docs/real-data-integration.md`**。
