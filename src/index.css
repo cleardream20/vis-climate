@@ -1,0 +1,41 @@
+@import 'tailwindcss';
+
+/* MapLibre */
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
+:root {
+  --app-bg: #0f1114;
+  --chrome-bg: rgba(15, 17, 20, 0.92);
+  --chrome-border: rgba(255, 255, 255, 0.08);
+  --text: #e8eaed;
+  --muted: #9aa0a6;
+  --accent: #f59e0b;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+#root {
+  height: 100%;
+  min-height: 100dvh;
+}
+
+body {
+  font-family:
+    Inter,
+    system-ui,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  background: var(--app-bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 地图容器在 flex 布局中占满剩余空间 */
+.maplibregl-ctrl-logo {
+  opacity: 0.45;
+}
