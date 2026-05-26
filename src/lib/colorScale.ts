@@ -117,15 +117,34 @@ const TEMP_COLOR_STOPS: { temp: number; rgb: [number, number, number] }[] = [
   { temp: -40, rgb: [198, 198, 198] },
 ]
 
-export function getTempColorStops() {
-  return TEMP_COLOR_STOPS
+/** 色盲友好：蓝→青→黄，避免红绿混淆 */
+const TEMP_COLOR_STOPS_COLORBLIND: { temp: number; rgb: [number, number, number] }[] = [
+  { temp: 45, rgb: [2, 48, 71] },
+  { temp: 38, rgb: [3, 74, 99] },
+  { temp: 32, rgb: [33, 158, 188] },
+  { temp: 28, rgb: [92, 200, 214] },
+  { temp: 24, rgb: [142, 202, 230] },
+  { temp: 20, rgb: [189, 224, 254] },
+  { temp: 16, rgb: [255, 214, 102] },
+  { temp: 12, rgb: [255, 183, 3] },
+  { temp: 8, rgb: [251, 133, 0] },
+  { temp: 0, rgb: [230, 57, 70] },
+  { temp: -10, rgb: [69, 123, 157] },
+  { temp: -25, rgb: [29, 53, 87] },
+]
+
+export function getTempColorStops(colorBlind = false) {
+  return colorBlind ? TEMP_COLOR_STOPS_COLORBLIND : TEMP_COLOR_STOPS
 }
 
 /**
  * 气温场：在相邻温度色标间 **连续插值**（填充质感，不透明）。
  */
-export function temperatureToRgba(tempC: number): [number, number, number, number] {
-  const stops = TEMP_COLOR_STOPS
+export function temperatureToRgba(
+  tempC: number,
+  colorBlind = false,
+): [number, number, number, number] {
+  const stops = colorBlind ? TEMP_COLOR_STOPS_COLORBLIND : TEMP_COLOR_STOPS
   if (tempC >= stops[0].temp) {
     const [r, g, b] = applyMistRgb(...stops[0].rgb)
     return [r, g, b, FIELD_VISUAL.mistFieldAlpha]

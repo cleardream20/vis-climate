@@ -6,6 +6,10 @@ export type NationalStatRow = {
   meanTempC: number
   anomalyC: number
   heatwaveDays: number
+  /** 全年逐日空间平均再平均（build_public_bundle 写入） */
+  annualMeanTempC?: number
+  /** 全年逐日空间最高再取 max（build_public_bundle 写入） */
+  annualMaxTempC?: number
 }
 
 type NationalStatsPayload = {

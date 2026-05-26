@@ -1,6 +1,8 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
+  /** 设为 `true` 时底图从 `/basemap/{z}/{x}/{y}.png` 加载（需先运行 download_basemap_tiles.py） */
+  readonly VITE_USE_LOCAL_BASEMAP?: string
   /** 设为 `true` 时从 `/data/real/` 加载 t2m、anomaly、national_stats */
   readonly VITE_USE_REAL_GRID?: string
   /** 旧版 JSON 无 gridLayout 且 NC 行序为南→北时可设 `true` 以纠正与底图错位 */

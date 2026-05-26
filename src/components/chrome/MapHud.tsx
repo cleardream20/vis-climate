@@ -1,8 +1,6 @@
 import clsx from 'clsx'
-import { DOMAIN } from '../../lib/constants'
 import { defaultProbeLine } from '../../lib/mapProbe'
 import { formatTimelineLabel } from '../../lib/temporalTypes'
-import { RASTER_STRIDE } from '../../lib/syntheticGrid'
 import { selectActiveYear, useAppStore } from '../../store/useAppStore'
 
 type MapHudProps = {
@@ -21,7 +19,6 @@ export function MapHud({ mapHover = null }: MapHudProps) {
   const yearAnomaly = useAppStore((s) => s.yearAnomaly)
   const yearHeatwave = useAppStore((s) => s.yearHeatwave)
   const playbackActive = useAppStore((s) => s.playbackActive)
-  const flowOverlay = useAppStore((s) => s.flowOverlay)
   const active = useAppStore(selectActiveYear)
   const lastRasterHud = useAppStore((s) => s.lastRasterHud)
   const annualHottestMonthByYear = useAppStore((s) => s.annualHottestMonthByYear)
@@ -144,9 +141,8 @@ export function MapHud({ mapHover = null }: MapHudProps) {
         <p className="mt-2 min-h-[2.75rem] border-t border-white/10 pt-2 font-mono text-[10px] leading-snug text-cyan-100/90 md:min-h-[2.5rem] md:text-[11px]">
           {probeLine}
         </p>
-        <p className="mt-2 text-[10px] leading-snug text-slate-400 md:text-[11px]">
-          上列为<strong>当前图层格点</strong>有限值聚合（海洋缺测不计入）；真实数据以导出 JSON 为准。地图{' '}
-          {DOMAIN.gridCols}×{DOMAIN.gridRows}，步长 {RASTER_STRIDE}；流线：{flowOverlay ? '开' : '关'}。
+        <p className="mt-2 text-[10px] leading-snug text-slate-500 md:text-[11px]">
+          上列为当前图层格点有限值聚合（海洋缺测不计入）。
         </p>
       </div>
     </div>

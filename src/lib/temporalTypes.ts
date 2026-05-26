@@ -17,6 +17,22 @@ export function clampTimelineYear(y: number, mode: TemporalField): number {
  * 用于 UI 展示：年内 → 「2023年7月」；
  * 年最高 → 「2023年7月」（`hottestMonth` 为 `t2m_annual_max` 的 meta，缺省 7 月）。
  */
+/** 年月 → 时间轴连续值（年内模式：year + (month-1)/12） */
+export function yearMonthToTimeline(year: number, month: number): number {
+  const y = Math.min(DOMAIN.yearMax, Math.max(DOMAIN.yearMin, Math.round(year)))
+  const m = Math.min(12, Math.max(1, Math.round(month)))
+  return Math.min(YEAR_AXIS_MAX, Math.max(DOMAIN.yearMin, y + (m - 1) / 12))
+}
+
+/** 时间轴连续值 → 年月（年内模式） */
+export function timelineToYearMonth(y: number): { year: number; month: number } {
+  const y0 = Math.floor(y)
+  const year = Math.min(DOMAIN.yearMax, Math.max(DOMAIN.yearMin, y0))
+  const frac = Math.max(0, Math.min(0.999999, y - y0))
+  const month = Math.min(12, Math.floor(frac * 12) + 1)
+  return { year, month }
+}
+
 export function formatTimelineLabel(
   y: number,
   mode: TemporalField,

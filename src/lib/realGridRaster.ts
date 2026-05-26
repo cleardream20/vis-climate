@@ -12,7 +12,6 @@ export function buildTempImageFromFloatGrid(
   values: Float32Array,
   colorBlind: boolean,
 ): { imageData: ImageData; meanTempC: number; maxTempC: number } {
-  void colorBlind
   const { gridRows: fullRows, gridCols: fullCols } = DOMAIN
   if (values.length < fullRows * fullCols) {
     throw new Error('real grid too short')
@@ -32,7 +31,7 @@ export function buildTempImageFromFloatGrid(
       const sc = Math.min(fullCols - 1, c * stride)
       const idx = sr * fullCols + sc
       const t = values[idx]
-      const rgba = Number.isFinite(t) ? temperatureToRgba(t) : TRANSPARENT
+      const rgba = Number.isFinite(t) ? temperatureToRgba(t, colorBlind) : TRANSPARENT
       if (Number.isFinite(t)) {
         sum += t
         n++

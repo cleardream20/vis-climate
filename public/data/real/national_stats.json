@@ -53,308 +53,410 @@
       2022,
       2023
     ],
-    "heatwaveRule": "count of days where daily spatial max of t2m (°C) >= 35.0°C"
+    "heatwaveRule": "count of days where daily spatial max of t2m (°C) >= 35.0°C",
+    "annualMeanRule": "mean over days of daily spatial mean t2m (°C)",
+    "annualMaxRule": "max over days of daily spatial max t2m (°C)"
   },
   "series": [
     {
       "year": 1974,
       "meanTempC": 20.94,
       "anomalyC": -0.34,
-      "heatwaveDays": 241
+      "heatwaveDays": 241,
+      "annualMeanTempC": 8.24,
+      "annualMaxTempC": 44.63
     },
     {
       "year": 1975,
       "meanTempC": 20.44,
       "anomalyC": -0.85,
-      "heatwaveDays": 221
+      "heatwaveDays": 221,
+      "annualMeanTempC": 8.73,
+      "annualMaxTempC": 44.35
     },
     {
       "year": 1976,
       "meanTempC": 19.95,
       "anomalyC": -1.33,
-      "heatwaveDays": 230
+      "heatwaveDays": 230,
+      "annualMeanTempC": 8.02,
+      "annualMaxTempC": 45.02
     },
     {
       "year": 1977,
       "meanTempC": 20.51,
       "anomalyC": -0.78,
-      "heatwaveDays": 243
+      "heatwaveDays": 243,
+      "annualMeanTempC": 8.45,
+      "annualMaxTempC": 44.43
     },
     {
       "year": 1978,
       "meanTempC": 20.77,
       "anomalyC": -0.51,
-      "heatwaveDays": 225
+      "heatwaveDays": 225,
+      "annualMeanTempC": 8.78,
+      "annualMaxTempC": 46.55
     },
     {
       "year": 1979,
       "meanTempC": 19.69,
       "anomalyC": -1.59,
-      "heatwaveDays": 225
+      "heatwaveDays": 225,
+      "annualMeanTempC": 8.8,
+      "annualMaxTempC": 45.36
     },
     {
       "year": 1980,
       "meanTempC": 21.17,
       "anomalyC": -0.12,
-      "heatwaveDays": 245
+      "heatwaveDays": 245,
+      "annualMeanTempC": 8.64,
+      "annualMaxTempC": 44.33
     },
     {
       "year": 1981,
       "meanTempC": 19.91,
       "anomalyC": -1.38,
-      "heatwaveDays": 227
+      "heatwaveDays": 227,
+      "annualMeanTempC": 8.61,
+      "annualMaxTempC": 44.5
     },
     {
       "year": 1982,
       "meanTempC": 22.43,
       "anomalyC": 1.14,
-      "heatwaveDays": 226
+      "heatwaveDays": 226,
+      "annualMeanTempC": 8.98,
+      "annualMaxTempC": 43.79
     },
     {
       "year": 1983,
       "meanTempC": 19.66,
       "anomalyC": -1.63,
-      "heatwaveDays": 221
+      "heatwaveDays": 221,
+      "annualMeanTempC": 8.82,
+      "annualMaxTempC": 44.0
     },
     {
       "year": 1984,
       "meanTempC": 21.06,
       "anomalyC": -0.23,
-      "heatwaveDays": 226
+      "heatwaveDays": 226,
+      "annualMeanTempC": 8.19,
+      "annualMaxTempC": 44.78
     },
     {
       "year": 1985,
       "meanTempC": 21.72,
       "anomalyC": 0.43,
-      "heatwaveDays": 226
+      "heatwaveDays": 226,
+      "annualMeanTempC": 8.43,
+      "annualMaxTempC": 43.98
     },
     {
       "year": 1986,
       "meanTempC": 21.3,
       "anomalyC": 0.01,
-      "heatwaveDays": 240
+      "heatwaveDays": 240,
+      "annualMeanTempC": 8.73,
+      "annualMaxTempC": 46.67
     },
     {
       "year": 1987,
       "meanTempC": 20.41,
       "anomalyC": -0.87,
-      "heatwaveDays": 240
+      "heatwaveDays": 240,
+      "annualMeanTempC": 8.85,
+      "annualMaxTempC": 46.29
     },
     {
       "year": 1988,
       "meanTempC": 20.89,
       "anomalyC": -0.39,
-      "heatwaveDays": 226
+      "heatwaveDays": 226,
+      "annualMeanTempC": 9.05,
+      "annualMaxTempC": 45.5
     },
     {
       "year": 1989,
       "meanTempC": 19.62,
       "anomalyC": -1.67,
-      "heatwaveDays": 230
+      "heatwaveDays": 230,
+      "annualMeanTempC": 9.12,
+      "annualMaxTempC": 44.82
     },
     {
       "year": 1990,
       "meanTempC": 20.9,
       "anomalyC": -0.38,
-      "heatwaveDays": 214
+      "heatwaveDays": 214,
+      "annualMeanTempC": 9.29,
+      "annualMaxTempC": 43.75
     },
     {
       "year": 1991,
       "meanTempC": 20.96,
       "anomalyC": -0.32,
-      "heatwaveDays": 240
+      "heatwaveDays": 240,
+      "annualMeanTempC": 9.02,
+      "annualMaxTempC": 45.76
     },
     {
       "year": 1992,
       "meanTempC": 21.72,
       "anomalyC": 0.44,
-      "heatwaveDays": 205
+      "heatwaveDays": 205,
+      "annualMeanTempC": 8.85,
+      "annualMaxTempC": 44.64
     },
     {
       "year": 1993,
       "meanTempC": 20.9,
       "anomalyC": -0.38,
-      "heatwaveDays": 228
+      "heatwaveDays": 228,
+      "annualMeanTempC": 8.71,
+      "annualMaxTempC": 45.5
     },
     {
       "year": 1994,
       "meanTempC": 21.6,
       "anomalyC": 0.31,
-      "heatwaveDays": 216
+      "heatwaveDays": 216,
+      "annualMeanTempC": 9.24,
+      "annualMaxTempC": 44.95
     },
     {
       "year": 1995,
       "meanTempC": 21.48,
       "anomalyC": 0.19,
-      "heatwaveDays": 226
+      "heatwaveDays": 226,
+      "annualMeanTempC": 9.19,
+      "annualMaxTempC": 45.26
     },
     {
       "year": 1996,
       "meanTempC": 20.45,
       "anomalyC": -0.84,
-      "heatwaveDays": 229
+      "heatwaveDays": 229,
+      "annualMeanTempC": 8.55,
+      "annualMaxTempC": 44.73
     },
     {
       "year": 1997,
       "meanTempC": 20.73,
       "anomalyC": -0.55,
-      "heatwaveDays": 214
+      "heatwaveDays": 214,
+      "annualMeanTempC": 9.22,
+      "annualMaxTempC": 43.43
     },
     {
       "year": 1998,
       "meanTempC": 21.82,
       "anomalyC": 0.53,
-      "heatwaveDays": 216
+      "heatwaveDays": 216,
+      "annualMeanTempC": 9.55,
+      "annualMaxTempC": 46.01
     },
     {
       "year": 1999,
       "meanTempC": 20.55,
       "anomalyC": -0.73,
-      "heatwaveDays": 250
+      "heatwaveDays": 250,
+      "annualMeanTempC": 9.4,
+      "annualMaxTempC": 46.03
     },
     {
       "year": 2000,
       "meanTempC": 21.49,
       "anomalyC": 0.2,
-      "heatwaveDays": 238
+      "heatwaveDays": 238,
+      "annualMeanTempC": 8.88,
+      "annualMaxTempC": 45.33
     },
     {
       "year": 2001,
       "meanTempC": 21.46,
       "anomalyC": 0.18,
-      "heatwaveDays": 242
+      "heatwaveDays": 242,
+      "annualMeanTempC": 9.22,
+      "annualMaxTempC": 44.6
     },
     {
       "year": 2002,
       "meanTempC": 21.98,
       "anomalyC": 0.69,
-      "heatwaveDays": 247
+      "heatwaveDays": 247,
+      "annualMeanTempC": 9.62,
+      "annualMaxTempC": 44.87
     },
     {
       "year": 2003,
       "meanTempC": 20.97,
       "anomalyC": -0.31,
-      "heatwaveDays": 225
+      "heatwaveDays": 225,
+      "annualMeanTempC": 9.08,
+      "annualMaxTempC": 44.35
     },
     {
       "year": 2004,
       "meanTempC": 21.45,
       "anomalyC": 0.17,
-      "heatwaveDays": 228
+      "heatwaveDays": 228,
+      "annualMeanTempC": 9.49,
+      "annualMaxTempC": 44.56
     },
     {
       "year": 2005,
       "meanTempC": 21.36,
       "anomalyC": 0.08,
-      "heatwaveDays": 231
+      "heatwaveDays": 231,
+      "annualMeanTempC": 9.27,
+      "annualMaxTempC": 44.33
     },
     {
       "year": 2006,
       "meanTempC": 23.3,
       "anomalyC": 2.02,
-      "heatwaveDays": 233
+      "heatwaveDays": 233,
+      "annualMeanTempC": 9.72,
+      "annualMaxTempC": 45.64
     },
     {
       "year": 2007,
       "meanTempC": 21.68,
       "anomalyC": 0.39,
-      "heatwaveDays": 226
+      "heatwaveDays": 226,
+      "annualMeanTempC": 10.22,
+      "annualMaxTempC": 45.27
     },
     {
       "year": 2008,
       "meanTempC": 21.71,
       "anomalyC": 0.42,
-      "heatwaveDays": 237
+      "heatwaveDays": 237,
+      "annualMeanTempC": 9.61,
+      "annualMaxTempC": 44.86
     },
     {
       "year": 2009,
       "meanTempC": 20.54,
       "anomalyC": -0.75,
-      "heatwaveDays": 243
+      "heatwaveDays": 243,
+      "annualMeanTempC": 9.58,
+      "annualMaxTempC": 44.57
     },
     {
       "year": 2010,
       "meanTempC": 22.18,
       "anomalyC": 0.89,
-      "heatwaveDays": 239
+      "heatwaveDays": 239,
+      "annualMeanTempC": 9.23,
+      "annualMaxTempC": 46.39
     },
     {
       "year": 2011,
       "meanTempC": 21.23,
       "anomalyC": -0.06,
-      "heatwaveDays": 217
+      "heatwaveDays": 217,
+      "annualMeanTempC": 9.21,
+      "annualMaxTempC": 45.35
     },
     {
       "year": 2012,
       "meanTempC": 22.7,
       "anomalyC": 1.42,
-      "heatwaveDays": 228
+      "heatwaveDays": 228,
+      "annualMeanTempC": 8.78,
+      "annualMaxTempC": 43.84
     },
     {
       "year": 2013,
       "meanTempC": 21.37,
       "anomalyC": 0.08,
-      "heatwaveDays": 223
+      "heatwaveDays": 223,
+      "annualMeanTempC": 9.5,
+      "annualMaxTempC": 43.96
     },
     {
       "year": 2014,
       "meanTempC": 22.23,
       "anomalyC": 0.95,
-      "heatwaveDays": 219
+      "heatwaveDays": 219,
+      "annualMeanTempC": 9.49,
+      "annualMaxTempC": 44.06
     },
     {
       "year": 2015,
       "meanTempC": 21.41,
       "anomalyC": 0.12,
-      "heatwaveDays": 225
+      "heatwaveDays": 225,
+      "annualMeanTempC": 9.85,
+      "annualMaxTempC": 44.72
     },
     {
       "year": 2016,
       "meanTempC": 21.75,
       "anomalyC": 0.47,
-      "heatwaveDays": 241
+      "heatwaveDays": 241,
+      "annualMeanTempC": 9.7,
+      "annualMaxTempC": 47.19
     },
     {
       "year": 2017,
       "meanTempC": 22.4,
       "anomalyC": 1.12,
-      "heatwaveDays": 247
+      "heatwaveDays": 247,
+      "annualMeanTempC": 9.94,
+      "annualMaxTempC": 45.16
     },
     {
       "year": 2018,
       "meanTempC": 21.96,
       "anomalyC": 0.68,
-      "heatwaveDays": 243
+      "heatwaveDays": 243,
+      "annualMeanTempC": 9.45,
+      "annualMaxTempC": 44.0
     },
     {
       "year": 2019,
       "meanTempC": 21.8,
       "anomalyC": 0.52,
-      "heatwaveDays": 225
+      "heatwaveDays": 225,
+      "annualMeanTempC": 9.82,
+      "annualMaxTempC": 43.1
     },
     {
       "year": 2020,
       "meanTempC": 21.87,
       "anomalyC": 0.59,
-      "heatwaveDays": 224
+      "heatwaveDays": 224,
+      "annualMeanTempC": 9.86,
+      "annualMaxTempC": 41.2
     },
     {
       "year": 2021,
       "meanTempC": 21.14,
       "anomalyC": -0.14,
-      "heatwaveDays": 218
+      "heatwaveDays": 218,
+      "annualMeanTempC": 9.85,
+      "annualMaxTempC": 45.0
     },
     {
       "year": 2022,
       "meanTempC": 23.05,
       "anomalyC": 1.77,
-      "heatwaveDays": 226
+      "heatwaveDays": 226,
+      "annualMeanTempC": 9.91,
+      "annualMaxTempC": 44.6
     },
     {
       "year": 2023,
       "meanTempC": 21.61,
       "anomalyC": 0.33,
-      "heatwaveDays": 232
+      "heatwaveDays": 232,
+      "annualMeanTempC": 10.09,
+      "annualMaxTempC": 52.2
     }
   ]
 }

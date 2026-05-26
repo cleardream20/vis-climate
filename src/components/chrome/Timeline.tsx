@@ -1,7 +1,12 @@
 import clsx from 'clsx'
-import { useCallback, useEffect, type KeyboardEvent } from 'react'
+import { useCallback, useEffect, useState, type KeyboardEvent } from 'react'
 import { DOMAIN } from '../../lib/constants'
-import { formatTimelineLabel, YEAR_AXIS_MAX } from '../../lib/temporalTypes'
+import {
+  formatTimelineLabel,
+  timelineToYearMonth,
+  yearMonthToTimeline,
+  YEAR_AXIS_MAX,
+} from '../../lib/temporalTypes'
 import {
   clampYear,
   selectActiveYear,
@@ -19,7 +24,6 @@ export function Timeline() {
   const temporalField = useAppStore((s) => s.temporalField)
   const year = useAppStore(selectActiveYear)
   const setActiveYear = useAppStore((s) => s.setActiveYear)
-  const userMode = useAppStore((s) => s.userMode)
   const playbackActive = useAppStore((s) => s.playbackActive)
   const playFrom = useAppStore((s) => s.playFrom)
   const playTo = useAppStore((s) => s.playTo)
@@ -29,21 +33,38 @@ export function Timeline() {
   const setPlayIntervalMs = useAppStore((s) => s.setPlayIntervalMs)
   const annualHottestMonthByYear = useAppStore((s) => s.annualHottestMonthByYear)
 
+  const parsed = timelineToYearMonth(year)
+  const [jumpYear, setJumpYear] = useState(parsed.year)
+  const [jumpMonth, setJumpMonth] = useState(parsed.month)
+
+  useEffect(() => {
+    const p = timelineToYearMonth(year)
+    setJumpYear(p.year)
+    setJumpMonth(p.month)
+  }, [year])
+
   const monthFor = (y: number) =>
     temporalField === 'annualMax' ? annualHottestMonthByYear[Math.round(y)] : undefined
 
   const playYearStep = temporalField === 'annualMax' ? 1 : 1 / 12
   const sliderMax = temporalField === 'annualMax' ? DOMAIN.yearMax : YEAR_AXIS_MAX
   const sliderStep = temporalField === 'annualMax' ? 1 : 1 / 12
+  const applyYearMonthJump = useCallback(() => {
+    useAppStore.getState().setPlaybackActive(false)
+    setActiveYear(yearMonthToTimeline(jumpYear, jumpMonth))
+  }, [jumpYear, jumpMonth, setActiveYear])
 
   useEffect(() => {
     if (!playbackActive) return
     const id = window.setInterval(() => {
       const s = useAppStore.getState()
       const cur = selectActiveYear(s)
-      const to = s.playTo
+      const to =
+        s.temporalField === 'annualMax'
+          ? s.playTo
+          : yearMonthToTimeline(s.playTo, 12)
       const step = s.temporalField === 'annualMax' ? 1 : 1 / 12
-      if (cur >= to) {
+      if (cur >= to - 1e-9) {
         s.setActiveYear(to)
         s.setPlaybackActive(false)
         return
@@ -56,12 +77,17 @@ export function Timeline() {
   const startPlayback = useCallback(() => {
     const s = useAppStore.getState()
     const cur = selectActiveYear(s)
-    const from = s.playFrom
-    const to = s.playTo
-    /** 已播到区间末端时再点播放：从头；暂停中途再播：从当前年月继续 */
+    const from =
+      s.temporalField === 'annualMax'
+        ? s.playFrom
+        : yearMonthToTimeline(s.playFrom, 1)
+    const to =
+      s.temporalField === 'annualMax'
+        ? s.playTo
+        : yearMonthToTimeline(s.playTo, 12)
     const atEnd =
       s.temporalField === 'annualMax'
-        ? Math.round(cur) >= to
+        ? Math.round(cur) >= s.playTo
         : cur >= to - 1e-9
     if (atEnd) {
       s.setActiveYear(from)
@@ -99,7 +125,7 @@ export function Timeline() {
       aria-label="年份时间轴"
     >
       <div className="mb-2 flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
-        <span className="shrink-0 font-medium">演示区间</span>
+        <span className="shrink-0 font-medium">播放区间</span>
         <label className="flex items-center gap-1">
           <span className="text-slate-500">从</span>
           <input
@@ -125,14 +151,54 @@ export function Timeline() {
           />
         </label>
         <span className="text-slate-500">年</span>
-        <span className="hidden shrink-0 text-slate-500 sm:inline">
-          （播放到结束年自动暂停；仅影响当前「{vizMode === 'anomaly' ? '距平场' : '热浪档'}」年份）
-        </span>
+
+        {temporalField === 'intrayear' ? (
+          <>
+            <span className="mx-0.5 text-slate-600">|</span>
+            <span className="shrink-0 text-slate-500">定位</span>
+            <label className="flex items-center gap-1">
+              <input
+                type="number"
+                className="w-[4.5rem] rounded-md border border-white/10 bg-black/40 px-2 py-1 text-slate-100 tabular-nums"
+                min={DOMAIN.yearMin}
+                max={DOMAIN.yearMax}
+                value={jumpYear}
+                disabled={playbackActive}
+                onChange={(e) =>
+                  setJumpYear(clampYear(Number(e.target.value) || DOMAIN.yearMin))
+                }
+              />
+              <span className="text-slate-500">年</span>
+            </label>
+            <label className="flex items-center gap-1">
+              <input
+                type="number"
+                className="w-[3.25rem] rounded-md border border-white/10 bg-black/40 px-2 py-1 text-slate-100 tabular-nums"
+                min={1}
+                max={12}
+                value={jumpMonth}
+                disabled={playbackActive}
+                onChange={(e) =>
+                  setJumpMonth(Math.min(12, Math.max(1, Number(e.target.value) || 1)))
+                }
+              />
+              <span className="text-slate-500">月</span>
+            </label>
+            <button
+              type="button"
+              disabled={playbackActive}
+              onClick={applyYearMonthJump}
+              className="rounded-md border border-white/15 bg-white/5 px-2 py-1 text-[11px] text-slate-200 hover:bg-white/10 disabled:opacity-50"
+            >
+              跳转
+            </button>
+          </>
+        ) : null}
       </div>
 
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <span className="text-xs font-medium text-slate-400">
-          当前图层年份
+          当前图层
           <span className="ml-1 text-slate-500">
             （{vizMode === 'anomaly' ? '距平' : '热浪'}）
           </span>
@@ -148,7 +214,7 @@ export function Timeline() {
             >
               {SPEED_PRESETS.map((p) => (
                 <option key={p.label} value={p.ms}>
-                  {p.label}（{p.ms}ms/年）
+                  {p.label}（{p.ms}ms/步）
                 </option>
               ))}
             </select>
@@ -186,9 +252,7 @@ export function Timeline() {
         aria-valuenow={year}
       />
       <p className="mt-1.5 text-[10px] leading-relaxed text-slate-500">
-        {userMode !== 'basic'
-          ? '快捷键：← → 调当前模式年份；空格 播放/暂停；暂停后续播从当前位置继续，播到末尾再播从「从」年重来。'
-          : '点「播放」从当前年月继续播到结束年；已播到末尾再点播放则从「从」年重来。拖滑块会暂停。'}
+        快捷键：← → 调整时间；空格 播放/暂停。年内模式可用「定位」跳转到指定年月。
       </p>
     </div>
   )

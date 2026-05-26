@@ -23,7 +23,7 @@ src/
   components/
     map/         # 地图与栅格层（后续可换 Deck.gl / 自定义 shader）
     chrome/      # 顶栏、时间轴、图例、指标抽屉
-    story/       # 故事线（`StoryPanel.tsx`：叠在地图左上列 HUD→搜索之下，可滚动）
+    story/       # 故事线：`StoryPanel`（地图左上）+ `StoryDetailDrawer`（右侧教学侧栏，520px）
   lib/           # 常量、色带、合成栅格（演示用）
   store/         # Zustand
 ```
@@ -42,7 +42,9 @@ npm run dev
 
 | 想改的内容 | 文件与位置 |
 |------------|------------|
-| 底图细节与灰度强度 | `src/lib/mapStyle.ts`：`BASEMAP_WATER_HEX`、`sources.carto.tiles`、`base-gray-detail.paint`（`raster-saturation` / `raster-contrast` / `raster-brightness-min`·`max`） |
+| 底图细节与灰度强度 | `src/lib/mapStyle.ts`：`BASEMAP_WATER_HEX`、`base-gray-detail.paint`（`raster-saturation` / `raster-contrast` / `raster-brightness-min`·`max`） |
+| 底图 | 默认 **CARTO 在线**瓦片；可选 `VITE_USE_LOCAL_BASEMAP=true` + `data/download_basemap_tiles.py` |
+| 分享导出 | 全国/城市侧栏 **分享** → PNG 或 HTML；支持另存为对话框（不支持时走浏览器下载） |
 | 国界 / 中国省界（深色矢量线，叠在热力之上） | `src/lib/mapBoundaries.ts`：省界 GeoJSON 为 **Natural Earth v5.1.2 完整 admin-1**（jsDelivr）；勿使用 cloudfront `naturalearth-3.3.0` 下同路径子集（仅约百条要素、无中国） |
 | 填充质感 / 轻微云雾（可选） | **`src/lib/fieldVisualConfig.ts`**：`mistRgbPull=0` 为实色填充；若需薄膜感可略增 `mistRgbPull` 并降 `mistFieldAlpha` |
 | 距平/气温渐变与色标 | `src/lib/colorScale.ts`：`anomalyFieldRgba`（锚点间 lerp）、`temperatureToRgba`；`src/lib/syntheticGrid.ts`：`RASTER_STRIDE` |
@@ -51,6 +53,7 @@ npm run dev
 | 城市标注分级 / 地图搜索 | `src/lib/places.ts`（`national`→`county` 与 `minZoomForTier`）；`MapPlaceSearch.tsx`；缩放时 `HeatmapMap` 内 `zoomend` 重绘标注 |
 | 点击城市 / 搜索选点 · 右侧城市洞察 | 标注可点选（`placeMarkers` + `HeatmapMap` 绑定 `setSelectedPlace`）；`CityDetailDrawer.tsx`：层级文案、经纬度度分秒、本地时区时间、CMA 四层热浪指标说明、1974–2023 四类指标演示折线、可选年月的「日最高气温」演示折线；状态见 `useAppStore.selectedPlace` |
 | 顶栏「指标」· 全国侧栏 | `MetricsDrawer.tsx`：摘要卡 + CMA 四层简介 + **1974–2023 四张年序折线**（`MetricYearSparkline.tsx`）；有 `national_stats.json` 时**首图**使用该文件中的热浪日数，后三图为演示序列（`demoNationalHeatMetrics.ts`）；竖线与时间轴当前年联动 |
+| 顶栏「故事线」 | 左上 `StoryPanel`：**时段大卡片**设置播放区间（如 1974–1990）；**里程碑小卡片**（按年排序）跳转年份并打开 `StoryDetailDrawer`（文案与图片见 `docs/storyline.md`、`src/lib/storyData.ts`；CO₂ 数据 `storyCo2Data.ts` + `StoryCo2Chart` 区间高亮/播放/2030–2060 示意预测）。打开故事详情时会暂时关闭全国/城市侧栏，关闭后自动恢复 |
 
 ## 与真实数据对接
 

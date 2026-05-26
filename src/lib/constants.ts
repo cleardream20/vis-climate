@@ -31,7 +31,5 @@ export const HEAT_PALETTE = {
   colorBlind: ['#BDE0FE', '#8CEAE6', '#219EBC', '#023047'] as const,
 }
 
-export type UserMode = 'basic' | 'classroom' | 'pro'
-
 /** 热浪分级（离散）| 距平场（色标连续渐变） */
 export type VizMode = 'heatwave' | 'anomaly'

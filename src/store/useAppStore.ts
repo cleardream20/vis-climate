@@ -1,8 +1,9 @@
 import { create } from 'zustand'
-import type { UserMode, VizMode } from '../lib/constants'
+import type { VizMode } from '../lib/constants'
 import { DOMAIN } from '../lib/constants'
 import type { HeatRasterBuildResult } from '../lib/heatRasterTypes'
 import type { Place } from '../lib/places'
+import { getEraForMilestone, getStoryMilestone } from '../lib/storyData'
 import { clampTimelineYear, type TemporalField } from '../lib/temporalTypes'
 
 export type MapViewMode = 'china' | 'global'
@@ -23,8 +24,6 @@ export type AppStore = {
   yearHeatwave: number
   /** 按当前 vizMode 写入对应年份 */
   setActiveYear: (y: number) => void
-  userMode: UserMode
-  setUserMode: (m: UserMode) => void
   colorBlind: boolean
   setColorBlind: (v: boolean) => void
   vizMode: VizMode
@@ -42,9 +41,6 @@ export type AppStore = {
   /** 每年一帧的间隔（毫秒），数值越大越慢 */
   playIntervalMs: number
   setPlayIntervalMs: (ms: number) => void
-  /** 是否显示 Ventusky 风格流线动画层 */
-  flowOverlay: boolean
-  setFlowOverlay: (v: boolean) => void
   mapViewMode: MapViewMode
   setMapViewMode: (m: MapViewMode) => void
   metricsOpen: boolean
@@ -68,6 +64,13 @@ export type AppStore = {
   /** 地图点击城市标注后打开右侧城市洞察侧栏；null 为关闭 */
   selectedPlace: Place | null
   setSelectedPlace: (p: Place | null) => void
+  /** 故事里程碑详情侧栏；非 null 时隐藏全国/城市侧栏 */
+  selectedStoryId: string | null
+  openStoryDetail: (id: string) => void
+  closeStoryDetail: () => void
+  /** 打开故事详情前侧栏状态，用于关闭后恢复 */
+  sidebarRestore: { metricsOpen: boolean; selectedPlace: Place | null } | null
+  setPlayRange: (from: number, to: number) => void
 }
 
 export function clampYear(y: number) {
@@ -97,8 +100,6 @@ export const useAppStore = create<AppStore>((set) => ({
         ? { yearAnomaly: cy }
         : { yearHeatwave: cy }
     }),
-  userMode: 'basic',
-  setUserMode: (m) => set({ userMode: m }),
   colorBlind: false,
   setColorBlind: (v) => set({ colorBlind: v }),
   vizMode: 'heatwave',
@@ -120,8 +121,8 @@ export const useAppStore = create<AppStore>((set) => ({
     ),
   playbackActive: false,
   setPlaybackActive: (v) => set({ playbackActive: v }),
-  playFrom: 1990,
-  playTo: 2020,
+  playFrom: DOMAIN.yearMin,
+  playTo: DOMAIN.yearMax,
   setPlayFrom: (y) =>
     set((s) => {
       const from = clampYear(y)
@@ -139,12 +140,22 @@ export const useAppStore = create<AppStore>((set) => ({
   playIntervalMs: 200,
   setPlayIntervalMs: (ms) =>
     set({ playIntervalMs: Math.min(900, Math.max(80, Math.round(ms))) }),
-  flowOverlay: false,
-  setFlowOverlay: (v) => set({ flowOverlay: v }),
   mapViewMode: 'china',
   setMapViewMode: (m) => set({ mapViewMode: m }),
   metricsOpen: false,
-  setMetricsOpen: (v) => set({ metricsOpen: v }),
+  setMetricsOpen: (v) =>
+    set((state) => {
+      if (v && state.selectedStoryId) {
+        return {
+          selectedStoryId: null,
+          sidebarRestore: null,
+          metricsOpen: true,
+          selectedPlace: null,
+        }
+      }
+      if (state.selectedStoryId && !v) return state
+      return { metricsOpen: v }
+    }),
   storyOpen: false,
   setStoryOpen: (v) => set({ storyOpen: v }),
   mapFlyRequest: null,
@@ -174,5 +185,59 @@ export const useAppStore = create<AppStore>((set) => ({
   setShowCountryBoundary: (v) => set({ showCountryBoundary: v }),
   setShowProvinceBoundary: (v) => set({ showProvinceBoundary: v }),
   selectedPlace: null,
-  setSelectedPlace: (p) => set({ selectedPlace: p }),
+  setSelectedPlace: (p) =>
+    set((state) => {
+      if (p && state.selectedStoryId) {
+        return {
+          selectedStoryId: null,
+          sidebarRestore: null,
+          selectedPlace: p,
+          metricsOpen: false,
+        }
+      }
+      return { selectedPlace: p }
+    }),
+  selectedStoryId: null,
+  sidebarRestore: null,
+  setPlayRange: (from, to) =>
+    set(() => {
+      const f = clampYear(from)
+      const t = clampYear(to)
+      const playFrom = Math.min(f, t)
+      const playTo = Math.max(f, t)
+      return { playFrom, playTo, playbackActive: false }
+    }),
+  openStoryDetail: (id) =>
+    set((state) => {
+      const milestone = getStoryMilestone(id)
+      const era = getEraForMilestone(id)
+      const milestoneYear = milestone?.year ?? selectActiveYear(state)
+      const cy = clampTimelineYear(milestoneYear, state.temporalField)
+      const yearPatch =
+        state.vizMode === 'anomaly' ? { yearAnomaly: cy } : { yearHeatwave: cy }
+      const playFrom = era ? clampYear(era.playFrom) : state.playFrom
+      const playTo = era ? clampYear(era.playTo) : state.playTo
+      return {
+        sidebarRestore: state.selectedStoryId
+          ? state.sidebarRestore
+          : { metricsOpen: state.metricsOpen, selectedPlace: state.selectedPlace },
+        metricsOpen: false,
+        selectedPlace: null,
+        selectedStoryId: id,
+        playbackActive: false,
+        playFrom,
+        playTo,
+        ...yearPatch,
+      }
+    }),
+  closeStoryDetail: () =>
+    set((state) => {
+      const r = state.sidebarRestore
+      return {
+        selectedStoryId: null,
+        sidebarRestore: null,
+        metricsOpen: r?.metricsOpen ?? false,
+        selectedPlace: r?.selectedPlace ?? null,
+      }
+    }),
 }))

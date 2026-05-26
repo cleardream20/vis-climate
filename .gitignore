@@ -7,6 +7,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# 本地底图瓦片（由 data/download_basemap_tiles.py 生成，体积大勿提交）
+public/basemap/**/*.png
+
 node_modules
 dist
 dist-ssr

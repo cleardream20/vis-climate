@@ -27,7 +27,6 @@ import type { TemporalField } from '../../lib/temporalTypes'
 import { selectActiveYear, useAppStore } from '../../store/useAppStore'
 import { MapHud } from '../chrome/MapHud'
 import { StoryPanel } from '../story/StoryPanel'
-import { FlowOverlay } from './FlowOverlay'
 import { MapPlaceSearch } from './MapPlaceSearch'
 
 import maplibreglWorker from 'maplibre-gl/dist/maplibre-gl-csp-worker?url'
@@ -72,6 +71,44 @@ function heatRasterLatShift(): number {
   return FIELD_VISUAL.heatRasterLatShiftDeg
 }
 
+function waitForMapStyle(map: maplibregl.Map): Promise<void> {
+  if (map.isStyleLoaded()) return Promise.resolve()
+  return new Promise((resolve) => {
+    const onIdle = () => {
+      if (!map.isStyleLoaded()) return
+      map.off('idle', onIdle)
+      resolve()
+    }
+    map.on('idle', onIdle)
+  })
+}
+
+/** 在样式就绪后应用热力层（修复首屏仅灰底图、需切换模式才上色） */
+function scheduleApplyRaster(map: maplibregl.Map) {
+  const run = () => {
+    const st = useAppStore.getState()
+    void applyRasterToMap(
+      map,
+      selectActiveYear(st),
+      st.colorBlind,
+      st.vizMode,
+      st.temporalField,
+    ).catch((e) => {
+      console.warn('[HeatmapMap] applyRasterToMap failed', e)
+    })
+  }
+  if (map.loaded() && map.isStyleLoaded()) {
+    run()
+    return
+  }
+  const onReady = () => {
+    if (map.isStyleLoaded()) run()
+    else map.once('idle', run)
+  }
+  if (map.loaded()) onReady()
+  else map.once('load', onReady)
+}
+
 async function applyRasterToMap(
   map: maplibregl.Map,
   year: number,
@@ -79,9 +116,10 @@ async function applyRasterToMap(
   vizMode: VizMode,
   temporalField: TemporalField,
 ) {
-  if (!map.isStyleLoaded()) return
   const seq = ++rasterRequestSeq
   const built = await buildHeatRasterImageData(year, colorBlind, vizMode, temporalField)
+  if (seq !== rasterRequestSeq) return
+  await waitForMapStyle(map)
   if (seq !== rasterRequestSeq) return
   useAppStore.getState().setLastRasterHud(built, year)
   const img = built.imageData
@@ -224,16 +262,12 @@ export function HeatmapMap() {
       requestAnimationFrame(resize)
       const st = useAppStore.getState()
       applyMapViewMode(map, st.mapViewMode, { animate: false })
-      const y = selectActiveYear(st)
-      const { colorBlind: cb, vizMode: vm } = st
       ensureAdminBoundaryLayers(map)
       syncBoundaryLayerVisibility(map, {
         showCountry: st.showCountryBoundary,
         showProvince: st.showProvinceBoundary,
       })
-      void applyRasterToMap(map, y, cb, vm, st.temporalField).catch((e) => {
-        console.warn('[HeatmapMap] applyRasterToMap failed', e)
-      })
+      scheduleApplyRaster(map)
 
       const syncPlaceMarkers = () => {
         markerRef.current.forEach((m) => m.remove())
@@ -310,10 +344,8 @@ export function HeatmapMap() {
 
   useEffect(() => {
     const map = mapRef.current
-    if (!map?.isStyleLoaded()) return
-    void applyRasterToMap(map, year, colorBlind, vizMode, temporalField).catch((e) => {
-      console.warn('[HeatmapMap] applyRasterToMap failed', e)
-    })
+    if (!map) return
+    scheduleApplyRaster(map)
   }, [year, colorBlind, vizMode, temporalField])
 
   useEffect(() => {
@@ -330,7 +362,6 @@ export function HeatmapMap() {
         role="application"
         aria-label="中国热浪与气温场地图"
       />
-      <FlowOverlay />
       <div className="pointer-events-none absolute inset-x-3 bottom-3 top-3 z-10 flex min-h-0 max-w-[min(100%,26rem)] flex-col gap-2 md:inset-x-4 md:bottom-4 md:top-4">
         <MapHud mapHover={mapHover} />
         <MapPlaceSearch />

@@ -55,7 +55,7 @@ export function buildSyntheticHeatRaster(
       const rgba =
         vizMode === 'anomaly'
           ? anomalyFieldRgba(t, colorBlind)
-          : temperatureToRgba(scalarToTempC(t))
+          : temperatureToRgba(scalarToTempC(t), colorBlind)
       if (vizMode === 'heatwave') {
         const tc = scalarToTempC(t)
         sumT += tc

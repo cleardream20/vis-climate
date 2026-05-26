@@ -9,10 +9,13 @@ export function Legend() {
   const colorBlind = useAppStore((s) => s.colorBlind)
   const vizMode = useAppStore((s) => s.vizMode)
   const metricsOpen = useAppStore((s) => s.metricsOpen)
-  const tempStops = getTempColorStops()
+  const tempStops = getTempColorStops(colorBlind)
 
   const anomalyColors = colorBlind ? [...ANOMALY_PALETTE_COLORBLIND] : [...ANOMALY_PALETTE_NORMAL]
   const tempColors = tempStops.map((s) => `rgb(${s.rgb[0]}, ${s.rgb[1]}, ${s.rgb[2]})`)
+  const tempTicks = colorBlind
+    ? [45, 32, 24, 16, 8, 0, -10, -25]
+    : [50, 30, 20, 10, 0, -10, -20, -40]
 
   return (
     <div
@@ -26,7 +29,7 @@ export function Legend() {
     >
       {vizMode === 'anomaly' ? (
         <>
-          <div className="mb-1.5 font-medium text-slate-300">距平 / 强度场（演示）</div>
+          <div className="mb-1.5 font-medium text-slate-300">距平场</div>
           <div
             className="h-3 w-full rounded-sm ring-1 ring-white/10"
             style={{
@@ -39,7 +42,9 @@ export function Legend() {
         </>
       ) : (
         <>
-          <div className="mb-1.5 font-medium text-slate-300">代表气温场（℃）</div>
+          <div className="mb-1.5 font-medium text-slate-300">
+            代表气温场（℃）{colorBlind ? ' · 色盲友好' : ''}
+          </div>
           <div
             className="h-3 w-full rounded-sm ring-1 ring-white/10"
             style={{
@@ -47,7 +52,7 @@ export function Legend() {
             }}
           />
           <div className="mt-1 grid grid-cols-8 gap-1 text-[10px] text-slate-400">
-            {[50, 30, 20, 10, 0, -10, -20, -40].map((t) => (
+            {tempTicks.map((t) => (
               <span key={t} className="text-center tabular-nums">
                 {t}
               </span>
