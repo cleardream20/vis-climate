@@ -1,8 +1,10 @@
 # HeatwaveViz（中国热浪五十年演变）
 
-面向《虚拟现实与数据可视化技术》课程实验的可视化前端：**单页、地图主画布、全局联动状态**，与 `docs/guideline.md` 中的架构一致。
+面向《虚拟现实与数据可视化技术》课程实验的可视化前端：**单页、地图主画布、全局联动状态**。
 
-<img src="./assets/mainPanel.png" />
+<img src="./assets/mainPanel1.png" />
+
+<img src="./assets/mainPanel2.png" />
 
 ## 技术栈
 
@@ -76,8 +78,12 @@ npm run dev
 python data/build_public_bundle.py --nc-dir data --out heatwave-viz/public/data/real --day 181
 ```
 
-## 性能注意（实验报告可写）
+## 性能注意
 
 - 全量 361×621 像素 PNG 纹理 + `raster-opacity` + `raster-fade-duration: 0` 避免切换闪烁；
 - 年份切换仅 `updateImage`，不重建几何；
 - 后续 22 万矢量面需改为 **GPU 纹理/实例化**（guideline 5.3）。
+
+## 分工合作
+
+<img src="./assets/collaboration.png" />
